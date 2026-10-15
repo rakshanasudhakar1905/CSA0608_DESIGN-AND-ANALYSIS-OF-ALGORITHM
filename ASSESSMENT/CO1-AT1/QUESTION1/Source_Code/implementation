@@ -1,0 +1,57 @@
+import math
+SERVER_RATE = 10**8  
+N = 1_000_000
+def running_time(operations):
+    return operations / SERVER_RATE
+def display_time(seconds):
+    if seconds < 1:
+        return f"{seconds:.10f} seconds"
+    return f"{seconds:.4f} seconds ({seconds / 60:.4f} minutes)"
+def main():
+    n = N
+    print("=" * 65)
+    print("SHOPSPHERE SCALABILITY AUDIT")
+    print(f"Input size: {n:,} records")
+    print(f"Server speed: {SERVER_RATE:,} operations/second")
+    print("=" * 65)
+    m1 = n * (n - 1) // 2
+    k = math.ceil(math.log2(n))
+    m2 = 2**k - 1
+    s2 = math.ceil(math.log2(n + 1))
+    m4_current = n**2
+    m4_proposed = n * math.log2(n)
+    m5 = n * (math.log2(n) ** 2)
+    report = 3 * n**2 + 10 * n * math.log2(n) + 50
+    results = [
+        ("M1 Duplicate Detector", m1),
+        ("M2 Rate Limiter", m2),
+        ("S2 Binary Search", s2),
+        ("M4 Current Design", m4_current),
+        ("M4 Proposed Design", m4_proposed),
+        ("M5 Sales Analytics", m5),
+        ("Nightly Report Generator", report),
+    ]
+    print("\nESTIMATED OPERATIONS AND RUNNING TIMES")
+    print("-" * 65)
+    for name, operations in results:
+        print(f"\n{name}")
+        print(f"Operations: {operations:,.2f}")
+        print(f"Estimated time: {display_time(running_time(operations))}")
+    print("\n" + "=" * 65)
+    print("VERIFICATION CHECKS")
+    print("=" * 65)
+    print("M1 formula:", n * (n - 1) // 2)
+    print("M2 operations for n=1024:", 2**10 - 1)
+    print("S2 T(1024):", 1 + math.log2(1024))
+    p = 0.5
+    expected_s1 = p * (n + 1) / 2 + (1 - p) * n
+    print(f"S1 average comparisons (p=0.5): {expected_s1:,.2f}")
+
+    print("\nSCALABILITY DECISION")
+    print("- Redesign M1 using hash-based grouping.")
+    print("- Redesign M4 to eliminate unnecessary replication.")
+    print("- Redesign the quadratic nightly report generator.")
+    print("- Retain M2 and binary search, subject to real benchmarks.")
+    print("- M5 meets the estimated 10-minute window.")
+if __name__ == "__main__":
+    main()
